@@ -1,0 +1,17 @@
+{
+	"name":"simplejsonrpc2/simplejsonrpc2",
+	"repositories": [
+		{  
+			"type":"git",
+			"url":"https://github.com/cameronjacobson/SimpleHttpClient.git"
+		}
+	],
+	"require": {
+		"datashovel/simplehttpclient": "1.0.*@dev"
+	},
+	"autoload": {
+		"psr-0": {
+			"SimpleJsonRPC2": "src/"
+		}
+	}
+}
