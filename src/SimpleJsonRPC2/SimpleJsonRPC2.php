@@ -49,10 +49,16 @@ class SimpleJsonRPC2
 		return $response;
 	}
 
+    private function httpRequest($method, $path, $body){
+        $this->transport->{$method}($path, $body);
+        $this->transport->fetch();
+        $buffers = $this->transport->getBuffers('body');
+        $this->transport->flush();
+        return $buffers[1];
+    }
+
 	private function send($path, Array $request){
-		$response = $this->transport->post($path, json_encode($request));
-		$headers = $response['headers'];
-		$body = $response['body'];
+		$body = $this->httpRequest('post', $path, json_encode($request));
 		return json_decode($body,true);
 	}
 
