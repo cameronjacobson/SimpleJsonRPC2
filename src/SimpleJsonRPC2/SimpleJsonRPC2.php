@@ -14,7 +14,12 @@ class SimpleJsonRPC2
 	private $method;
 
 	public function __construct(SimpleHttpClient $http){
-		$this->transport = $http;
+		$this->http = $http;
+		$this->transport = $http->getContext();
+	}
+
+	public function getNewContext(){
+		$this->transport = $this->http->getContext();
 	}
 
 	public function setParams($params){
@@ -49,15 +54,15 @@ class SimpleJsonRPC2
 		return $response;
 	}
 
-    private function httpRequest($method, $path, $body){
-        $this->transport->{$method}($path, $body);
-        $this->transport->fetch();
-        $buffers = $this->transport->getBuffers('body');
-        $this->transport->flush();
-        return $buffers[1];
-    }
+	private function httpRequest($method, $path, $body){
+		$this->transport->{$method}($path, $body);
+		$this->transport->fetch();
+		$buffers = $this->transport->getBuffers('body');
+		return current($buffers);
+	}
 
 	private function send($path, Array $request){
+		$this->transport->cleanUp();
 		$body = $this->httpRequest('post', $path, json_encode($request));
 		return json_decode($body,true);
 	}
